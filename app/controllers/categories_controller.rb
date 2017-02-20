@@ -1,18 +1,26 @@
 class CategoriesController < ApplicationController
 
 	def index
-		render :json => Category.all
+		begin
+			render :json => Category.all
+		rescue
+			render :status => 500
+		end
 	end
 
 	def show
-		render :json => Category.find(params[:id])
+		begin
+			render :json => Category.find(params[:id])
+		rescue
+			render :status => 500
+		end
 	end
 
 	def create
 		begin
 			Category.create(:name => params[:name])
 			render :status => :ok
-		rescue Exception => e
+		rescue
 			render :status => 500
 		end
 	end
@@ -21,7 +29,7 @@ class CategoriesController < ApplicationController
 		begin
 			Category.update(params[:id], params.permit(:name))
 			render :status => :ok
-		rescue Exception => e
+		rescue
 			render :status => 500
 		end
 	end
@@ -30,7 +38,7 @@ class CategoriesController < ApplicationController
 		begin
 			Category.find(params[:id]).delete
 			render :status => :ok
-		rescue Exception => e
+		rescue
 			render :status => 500
 		end
 	end
