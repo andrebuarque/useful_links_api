@@ -1,4 +1,7 @@
 class LinksController < ApplicationController
+
+	before_action :set_link, :only => [:show, :update, :destroy]
+
 	def index
 		begin
 			links = Link.eager_load(:category, :tags)
@@ -10,7 +13,7 @@ class LinksController < ApplicationController
 
 	def show
 		begin
-			render :json => Link.find(params[:id])
+			render :json => @link
 		rescue
 			render :status => 500
 		end
@@ -22,12 +25,7 @@ class LinksController < ApplicationController
 
 			Link.transaction do 
 				link = Link.create(link_params)
-
-				new_tags = tags.select { |id| !Tag.exists?(id) }
-				existing_tags = (tags - new_tags).map { |t| Tag.find(t)  }
-				
-				new_tags = create_tags(new_tags) + existing_tags
-				link.tags = new_tags
+				link.tags = create_tags(tags)
 				link.save
 			end
 
@@ -40,10 +38,27 @@ class LinksController < ApplicationController
 	def update
 		begin
 			tags = params[:tags]
-			link = Link.find(link_params[:id])
-
 			
+			Link.transaction do
+				@link.title = link_params[:title]
+				@link.url = link_params[:url]
+				@link.category_id = link_params[:category_id]
+				@link.tags = create_tags(tags)
 
+				@link.save
+			end
+
+			render :status => :ok
+
+		rescue
+			render :status => 500
+		end
+	end
+
+	def destroy
+		begin
+			@link.destroy
+			render :status => :ok
 		rescue
 			render :status => 500
 		end
@@ -51,8 +66,14 @@ class LinksController < ApplicationController
 
 	private
 
+		def set_link
+			@link = Link.includes(:tags).find(params[:id])
+		end
+
 		def create_tags(tags)
-			tags.map { |t| Tag.create(:name => t)  }
+			tags.map do |tag|
+				Tag.exists?(tag) ? Tag.find(tag) : Tag.create(:name => tag)
+			end
 		end
 
 		def link_params
