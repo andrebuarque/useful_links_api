@@ -53,5 +53,6 @@ production:
   encoding: unicode
   url: <%= ENV['DATABASE_URL'] %>
   pool: <%= ENV['DB_POOL'] || 10 %>
-  username: useful_links_api
-  password: useful_links_api
+  port: 5432
+  username: 
+  password: 
