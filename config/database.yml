@@ -49,6 +49,8 @@ test:
 #
 production:
   <<: *default
+  adapter: postgresql
+  encoding: unicode
   database: useful_links_api_production
   username: useful_links_api
-  password: <%= ENV['USEFUL_LINKS_API_DATABASE_PASSWORD'] %>
+  password: useful_links_api
