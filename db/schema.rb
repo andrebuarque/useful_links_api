@@ -12,13 +12,16 @@
 
 ActiveRecord::Schema.define(version: 20170208165555) do
 
-  create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "links", force: :cascade do |t|
     t.string   "title"
     t.string   "url"
     t.integer  "category_id"
@@ -27,14 +30,14 @@ ActiveRecord::Schema.define(version: 20170208165555) do
     t.index ["category_id"], name: "index_links_on_category_id", using: :btree
   end
 
-  create_table "links_tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "links_tags", force: :cascade do |t|
     t.integer "link_id"
     t.integer "tag_id"
     t.index ["link_id"], name: "index_links_tags_on_link_id", using: :btree
     t.index ["tag_id"], name: "index_links_tags_on_tag_id", using: :btree
   end
 
-  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "tags", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

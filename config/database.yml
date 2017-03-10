@@ -10,22 +10,23 @@
 #   http://dev.mysql.com/doc/refman/5.7/en/old-client.html
 #
 default: &default
-  adapter: mysql2
-  encoding: utf8
+  adapter: postgresql
+  encoding: unicode
   pool: 5
-  username: root
-  password: root
+  username: andrebuarque
+  password: password
 
 development:
   <<: *default
+  host: localhost
   database: useful_links_api_development
-  socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  host: localhost
   database: useful_links_api_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
@@ -49,10 +50,6 @@ test:
 #
 production:
   <<: *default
-  adapter: postgresql
-  encoding: unicode
-  url: <%= ENV['DATABASE_URL'] %>
-  pool: <%= ENV['DB_POOL'] || 10 %>
-  port: 5432
-  username: 
-  password: 
+  database: useful_links_api_production
+  # username: useful_links_api_production
+  # password: useful_links_api_production
